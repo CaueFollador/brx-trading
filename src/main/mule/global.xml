@@ -23,9 +23,6 @@ http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/
 
 	<!-- Bybit API -->
 	<global-property doc:name="Global Property" doc:id="1d145032-fc64-4f5d-91f6-73ca61839653" name="mule.env" value="dev" />
-	<db:config name="Database_Config" doc:name="Database Config" doc:id="5957db3a-3418-4ef4-8e43-9a58e9cb6a87" >
-		<db:generic-connection url="jdbc:postgresql://${db.host}:${db.port}/${db.name}" driverClassName="org.postgresql.Driver" user="${db.user}" password="${db.password}" />
-	</db:config>
 	<http:request-config name="bybit-http-request" doc:name="HTTP Request config" doc:id="897d7f21-da8c-4ba4-990f-715f615d11b7" basePath="/v5">
 		<http:request-connection protocol="HTTPS" host="${bybit.host}" port="443" />
 	</http:request-config>

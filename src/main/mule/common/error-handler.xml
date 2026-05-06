@@ -6,27 +6,6 @@
 	xsi:schemaLocation="
 		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 		http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<error-handler name="database-error-handler" doc:id="8019699f-50aa-44c6-90de-37a613d2563a" >
-		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="cf97dd63-d466-4739-b810-c3cbf93a1159" type="DATABASE:INSERT_SIGNAL">
-			<logger level="WARN" doc:name="Logger" doc:id="a1e72b1d-6967-4bdc-8e30-d67d843fc2f7" message="Failed to Insert signal in database"/>
-			<async doc:name="Async" doc:id="2300b05f-4ff9-4f5d-a855-3d374d1f7685" >
-				<set-variable value='#["⚠️ [BRX]  Warning - Insert Signal | " ++ vars.ticker]' doc:name="Set Subject" doc:id="870fdbec-fb0a-46ec-8239-9a890d32e8f5" variableName="subject" />
-				<set-variable value='#["Your current signal failed to be insert in our database. Please contact support with this ID: " ++ correlationId ++ " | " ++ now()]' doc:name="Set mailBody" doc:id="396d1473-ec90-417c-b77a-9c41be0f3bbe" variableName="mailBody" />
-				<flow-ref doc:name="Prepare Email" doc:id="c4f3f744-3435-4eda-b2f4-25ac5526a4c8" name="prepare-error-email" />
-			</async>
-		</on-error-continue>
-		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="3c72e864-dc1d-4051-ae2a-f01a258fe62c" type="DATABASE:INSERT_ORDER" >
-			<logger level="WARN" doc:name="Logger" doc:id="877cd16a-5d07-47c0-8e30-87501d188b72" message="Failed to Insert Order in Database"/>
-			<async doc:name="Async" doc:id="2469c1de-52af-4cc8-8b98-ec3ecea22b07" >
-				<set-variable value='#["⚠️ [BRX]  Warning - Insert Order | " ++ vars.ticker]' doc:name="Set Subject" doc:id="e73c1fd3-1274-41cf-85b1-daab6ff835fb" variableName="subject" />
-				<set-variable value='#["Your current order failed to be insert in our database. Please contact support with this ID: " ++ correlationId ++ " | " ++ now()]' doc:name="Set mailBody" doc:id="d2c25244-94c2-4487-af9b-223184f3da54" variableName="mailBody" />
-				<flow-ref doc:name="Prepare Email" doc:id="61ab4186-f693-46d3-bf97-87eb605a3753" name="prepare-error-email" />
-			</async>
-		</on-error-continue>
-		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="36dbea45-6225-4233-a119-89efb3f4a4bb" type="DATABASE:SELECT_ORDER" >
-			<logger level="WARN" doc:name="Logger" doc:id="5b76413b-1910-44b6-8661-373df67a69e8" message="Failed to retrieve Order ID from Database"/>
-		</on-error-continue>
-	</error-handler>
 	<error-handler name="get-user-balance-error-handler" doc:id="34210142-35c2-46e6-b57d-13ecda920067" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5842c796-7d98-4634-886e-15ea8ad0f8a7" >
 			<logger level="ERROR" doc:name="Logger" doc:id="cf8fa66c-9d9c-4068-96bb-f36894aa03cd" message="Failed to get User balance"/>

@@ -3,13 +3,6 @@ bybit:
   apiKey: "${BYBIT_API_KEY}"
   apiSecret: "${BYBIT_API_SECRET}"
 
-db:
-  host: "postgres"
-  port: "5432"
-  name: "${DB_NAME}"
-  user: "${DB_USER}"
-  password: "${DB_PASSWORD}"
-
 permission:
   key: "${URL_PERMISSION_KEY}"
   secret: "${URL_PERMISSION_SECRET}"

@@ -60,7 +60,7 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 		<remove-variable doc:name="Remove Query Params" doc:id="0655a160-0cee-4320-af7d-9d7725e6885a" variableName="queryParams"/>
 	</sub-flow>
 	<sub-flow name="create-order-subflow" doc:id="0db4c022-476c-4f9a-8493-261937028ed5" >
-		<set-variable value="#[%dw 2.0&#10;output application/json indent = false, skipNullOn = 'everywhere'&#10;---&#10;{&#10;  &quot;category&quot;: &quot;linear&quot;,&#10;  &quot;symbol&quot;: vars.ticker,&#10;  &quot;side&quot;: vars.signal,&#10;  &quot;orderType&quot;: &quot;Market&quot;,&#10;  &quot;qty&quot;: vars.orderQty,&#10;  &quot;positionIdx&quot;: 0,&#10;  &quot;orderLinkId&quot;: vars.dbId,&#10;  &quot;reduceOnly&quot;: vars.reduceOnly default null&#10;}]" doc:name="Set Body To Create Order" doc:id="05582796-c17c-41a4-84d4-2c9480ce7d3b" variableName="body" />
+		<set-variable value="#[%dw 2.0&#10;output application/json indent = false, skipNullOn = 'everywhere'&#10;---&#10;{&#10;  &quot;category&quot;: &quot;linear&quot;,&#10;  &quot;symbol&quot;: vars.ticker,&#10;  &quot;side&quot;: vars.signal,&#10;  &quot;orderType&quot;: &quot;Market&quot;,&#10;  &quot;qty&quot;: vars.orderQty,&#10;  &quot;positionIdx&quot;: 0,&#10;  &quot;reduceOnly&quot;: vars.reduceOnly default null&#10;}]" doc:name="Set Body To Create Order" doc:id="05582796-c17c-41a4-84d4-2c9480ce7d3b" variableName="body" />
 		<flow-ref doc:name="Set Bybit Headers" doc:id="2cae7a95-da5a-4fae-8294-83fae6b2bd6a" name="set-bybit-headers" />
 		<http:request doc:name="Request" doc:id="9764159a-8a4f-432f-a740-48ab0c168bfb" config-ref="bybit-http-request" method="POST" path="/order/create" >
 			<http:body ><![CDATA[#[vars.body]]]></http:body>
@@ -77,23 +77,6 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 		</http:request>
 		<flow-ref doc:name="Validate Bybit Requistion" doc:id="9364deca-efbc-4184-9f2b-af4b670e6703" name="validate-bybit-requisition" />
 		<logger level="INFO" doc:name="Logger" doc:id="9efb5b04-d97f-4153-82d9-3d30af1ed7d5" />
-	</sub-flow>
-	<sub-flow name="insert-orders-db-subflow" doc:id="888ab340-fe1e-4bf7-9de1-8be22fe0e168" >
-		<db:insert doc:name="Insert Orders" doc:id="f7c588c0-b5a6-4d6b-8935-dab993da4b58" config-ref="Database_Config">
-			<error-mapping targetType="DATABASE:INSERT_ORDER" />
-			<db:sql ><![CDATA[INSERT INTO orders ("signalId", "symbol", "side", "orderType", "qty", "orderId", "orderRole", "parentOrderId", "createdAt")
-VALUES (:signalId, :symbol, :side, :orderType, :qty, :orderId, :orderRole, :parentOrderId, NOW())]]></db:sql>
-			<db:input-parameters ><![CDATA[#[{
-  signalId: vars.dbId,
-  symbol: vars.ticker,
-  side: vars.signal,
-  orderType: "Market",
-  qty: vars.orderQty,
-  orderId: payload.result.orderId,
-  orderRole: vars.orderRole,
-  parentOrderId: vars.parentOrderId
-}]]]></db:input-parameters>
-		</db:insert>
 	</sub-flow>
 	<sub-flow name="send-email-subflow" doc:id="b7ed2eb3-dc4e-46d5-9ef1-c72671804850" >
 		<email:send doc:name="Send" doc:id="0ff2cb8e-0ba0-43d4-9b40-8e2b3bbf0216" config-ref="Email_SMTP" subject="#[vars.subject]">
