@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_c6281a1d_fa3c_4786_bbcc_050528cad14a_Input_Variables_quoteQty = Any
+

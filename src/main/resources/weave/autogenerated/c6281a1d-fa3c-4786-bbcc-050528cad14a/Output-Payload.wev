@@ -1,0 +1,321 @@
+%dw 2.0
+
+type auto_c6281a1d_fa3c_4786_bbcc_050528cad14a_Output_Payload = {|
+  "0": org_mule_runtime_api_message_Message {"typeId": "org.mule.runtime.api.message.Message"}, 
+  "1": org_mule_runtime_api_message_Message_65 {"typeId": "org.mule.runtime.api.message.Message"}, 
+  "2": org_mule_runtime_api_message_Message_70 {"typeId": "org.mule.runtime.api.message.Message"}, 
+  "3": org_mule_runtime_api_message_Message_72 {"typeId": "org.mule.runtime.api.message.Message"}, 
+  "4": org_mule_runtime_api_message_Message_148 {"typeId": "org.mule.runtime.api.message.Message"}
+|}
+type org_mule_runtime_api_message_Message_148 = {|
+  payload: Any, 
+  attributes: org_mule_extension_http_api_HttpResponseAttributes_150 {"typeId": "org.mule.extension.http.api.HttpResponseAttributes",
+  "typeAlias": "HttpResponseAttributes"}
+|} {"typeId": "org.mule.runtime.api.message.Message"}
+type org_mule_extension_http_api_HttpResponseAttributes_150 = {|
+  statusCode: Number, 
+  reasonPhrase: String, 
+  headers: { _?: String }
+|} {"typeId": "org.mule.extension.http.api.HttpResponseAttributes",
+"typeAlias": "HttpResponseAttributes"}
+
+
+
+
+type org_mule_runtime_api_message_Message_70 = {|
+  payload: java_lang_Object_71 {"class": "java.lang.Object",
+  "typeAlias": "Object",
+  "typeId": "java.lang.Object"}, 
+  attributes: org_mule_extension_http_api_HttpRequestAttributes {"typeId": "org.mule.extension.http.api.HttpRequestAttributes",
+  "typeAlias": "HttpRequestAttributes"}
+|} {"typeId": "org.mule.runtime.api.message.Message"}
+type org_mule_extension_http_api_HttpRequestAttributes = {|
+  listenerPath: String, 
+  rawRequestPath: String, 
+  relativePath: String, 
+  maskedRequestPath: String, 
+  version: String, 
+  scheme: String, 
+  method: String, 
+  requestUri: String, 
+  rawRequestUri: String, 
+  queryString: String, 
+  localAddress: String, 
+  remoteAddress: String, 
+  clientCertificate?: org_mule_extension_http_api_certificate_CertificateData {"typeId": "org.mule.extension.http.api.certificate.CertificateData",
+  "typeAlias": "CertificateData"}, 
+  queryParams: { _?: String }, 
+  uriParams: { _?: String }, 
+  requestPath: String, 
+  headers: { _?: String }
+|} {"typeId": "org.mule.extension.http.api.HttpRequestAttributes",
+"typeAlias": "HttpRequestAttributes"}
+type org_mule_extension_http_api_certificate_CertificateData = {|
+  basicConstraints?: Number, 
+  criticalExtensionOIDs?: Array<String>, 
+  encoded?: Binary, 
+  extendedKeyUsage?: Array<String>, 
+  extensions?: Array<org_mule_extension_http_api_certificate_CertificateExtension {"typeAlias": "CertificateExtension",
+  "typeId": "org.mule.extension.http.api.certificate.CertificateExtension"}>, 
+  issuerAlternativeNames?: Array<org_mule_extension_http_api_certificate_AlternativeNameData {"typeAlias": "AlternativeNameData",
+  "typeId": "org.mule.extension.http.api.certificate.AlternativeNameData"}>, 
+  issuerDN?: org_mule_extension_http_api_certificate_PrincipalData {"typeId": "org.mule.extension.http.api.certificate.PrincipalData",
+  "typeAlias": "PrincipalData"}, 
+  issuerUniqueID?: Array<Boolean {"typeId": "boolean"}>, 
+  issuerX500Principal?: org_mule_extension_http_api_certificate_X500PrincipalData {"typeId": "org.mule.extension.http.api.certificate.X500PrincipalData",
+  "typeAlias": "X500PrincipalData"}, 
+  keyUsage?: Array<Boolean {"typeId": "boolean"}>, 
+  name?: String, 
+  nonCriticalExtensionOIDs?: Array<String>, 
+  notAfter?: Date {"class": "java.util.Date",
+  "typeId": "java.util.Date"}, 
+  notBefore?: Date {"class": "java.util.Date",
+  "typeId": "java.util.Date"}, 
+  publicKey?: org_mule_extension_http_api_certificate_PublicKeyData {"typeId": "org.mule.extension.http.api.certificate.PublicKeyData",
+  "typeAlias": "PublicKeyData"}, 
+  serialNumber?: Number, 
+  serialNumberObject?: org_mule_extension_http_api_certificate_SerialNumberData {"typeAlias": "SerialNumberData",
+  "typeId": "org.mule.extension.http.api.certificate.SerialNumberData"}, 
+  sigAlgName?: String, 
+  sigAlgOID?: String, 
+  sigAlgParams?: Binary, 
+  signature?: Binary, 
+  subjectAlternativeNames?: Array<org_mule_extension_http_api_certificate_AlternativeNameData_48 {"typeAlias": "AlternativeNameData",
+  "typeId": "org.mule.extension.http.api.certificate.AlternativeNameData"}>, 
+  subjectDN?: org_mule_extension_http_api_certificate_PrincipalData_51 {"typeId": "org.mule.extension.http.api.certificate.PrincipalData",
+  "typeAlias": "PrincipalData"}, 
+  subjectX500Principal?: org_mule_extension_http_api_certificate_X500PrincipalData_54 {"typeId": "org.mule.extension.http.api.certificate.X500PrincipalData",
+  "typeAlias": "X500PrincipalData"}, 
+  "type"?: String, 
+  version?: Number
+|} {"typeId": "org.mule.extension.http.api.certificate.CertificateData",
+"typeAlias": "CertificateData"}
+type org_mule_extension_http_api_certificate_CertificateExtension = {|
+  criticality?: Boolean {"typeId": "boolean"}, 
+  oid?: String, 
+  value?: Binary
+|} {"typeAlias": "CertificateExtension",
+"typeId": "org.mule.extension.http.api.certificate.CertificateExtension"}
+
+
+type org_mule_extension_http_api_certificate_AlternativeNameData_48 = {|
+  name?: String, 
+  "type"?: Number
+|} {"typeAlias": "AlternativeNameData",
+"typeId": "org.mule.extension.http.api.certificate.AlternativeNameData"}
+
+
+type org_mule_extension_http_api_certificate_X500PrincipalData = {| name?: String |} {"typeId": "org.mule.extension.http.api.certificate.X500PrincipalData",
+"typeAlias": "X500PrincipalData"}
+
+
+type org_mule_extension_http_api_certificate_AlternativeNameData = {|
+  name?: String, 
+  "type"?: Number
+|} {"typeAlias": "AlternativeNameData",
+"typeId": "org.mule.extension.http.api.certificate.AlternativeNameData"}
+
+
+type org_mule_extension_http_api_certificate_PrincipalData = {|
+  commonName?: String, 
+  name?: String
+|} {"typeId": "org.mule.extension.http.api.certificate.PrincipalData",
+"typeAlias": "PrincipalData"}
+
+
+type org_mule_extension_http_api_certificate_PrincipalData_51 = {|
+  commonName?: String, 
+  name?: String
+|} {"typeId": "org.mule.extension.http.api.certificate.PrincipalData",
+"typeAlias": "PrincipalData"}
+
+
+type org_mule_extension_http_api_certificate_X500PrincipalData_54 = {| name?: String |} {"typeId": "org.mule.extension.http.api.certificate.X500PrincipalData",
+"typeAlias": "X500PrincipalData"}
+
+
+type org_mule_extension_http_api_certificate_SerialNumberData = {| serialNumber?: Number |} {"typeAlias": "SerialNumberData",
+"typeId": "org.mule.extension.http.api.certificate.SerialNumberData"}
+
+
+type org_mule_extension_http_api_certificate_PublicKeyData = {|
+  algorithm?: String, 
+  encoded?: Binary, 
+  modulus?: Number, 
+  params?: Number, 
+  publicKey?: String
+|} {"typeId": "org.mule.extension.http.api.certificate.PublicKeyData",
+"typeAlias": "PublicKeyData"}
+
+
+
+
+
+
+type java_lang_Object_71 = {|  |} {"class": "java.lang.Object",
+"typeAlias": "Object",
+"typeId": "java.lang.Object"}
+
+
+
+
+type org_mule_runtime_api_message_Message = {|
+  payload: Any, 
+  attributes: org_mule_extension_http_api_HttpRequestAttributes {"typeId": "org.mule.extension.http.api.HttpRequestAttributes",
+  "typeAlias": "HttpRequestAttributes"}
+|} {"typeId": "org.mule.runtime.api.message.Message"}
+
+
+type org_mule_runtime_api_message_Message_72 = {|
+  payload: Any, 
+  attributes: org_mule_extension_http_api_HttpRequestAttributes_74 {"typeId": "org.mule.extension.http.api.HttpRequestAttributes",
+  "typeAlias": "HttpRequestAttributes"}
+|} {"typeId": "org.mule.runtime.api.message.Message"}
+type org_mule_extension_http_api_HttpRequestAttributes_74 = {|
+  listenerPath: String, 
+  rawRequestPath: String, 
+  relativePath: String, 
+  maskedRequestPath: String, 
+  version: String, 
+  scheme: String, 
+  method: String, 
+  requestUri: String, 
+  rawRequestUri: String, 
+  queryString: String, 
+  localAddress: String, 
+  remoteAddress: String, 
+  clientCertificate?: org_mule_extension_http_api_certificate_CertificateData_87 {"typeId": "org.mule.extension.http.api.certificate.CertificateData",
+  "typeAlias": "CertificateData"}, 
+  queryParams: { _?: String }, 
+  uriParams: { _?: String }, 
+  requestPath: String, 
+  headers: { _?: String }
+|} {"typeId": "org.mule.extension.http.api.HttpRequestAttributes",
+"typeAlias": "HttpRequestAttributes"}
+type org_mule_extension_http_api_certificate_CertificateData_87 = {|
+  basicConstraints?: Number, 
+  criticalExtensionOIDs?: Array<String>, 
+  encoded?: Binary, 
+  extendedKeyUsage?: Array<String>, 
+  extensions?: Array<org_mule_extension_http_api_certificate_CertificateExtension_95 {"typeAlias": "CertificateExtension",
+  "typeId": "org.mule.extension.http.api.certificate.CertificateExtension"}>, 
+  issuerAlternativeNames?: Array<org_mule_extension_http_api_certificate_AlternativeNameData_100 {"typeAlias": "AlternativeNameData",
+  "typeId": "org.mule.extension.http.api.certificate.AlternativeNameData"}>, 
+  issuerDN?: org_mule_extension_http_api_certificate_PrincipalData_103 {"typeId": "org.mule.extension.http.api.certificate.PrincipalData",
+  "typeAlias": "PrincipalData"}, 
+  issuerUniqueID?: Array<Boolean {"typeId": "boolean"}>, 
+  issuerX500Principal?: org_mule_extension_http_api_certificate_X500PrincipalData_108 {"typeId": "org.mule.extension.http.api.certificate.X500PrincipalData",
+  "typeAlias": "X500PrincipalData"}, 
+  keyUsage?: Array<Boolean {"typeId": "boolean"}>, 
+  name?: String, 
+  nonCriticalExtensionOIDs?: Array<String>, 
+  notAfter?: Date {"class": "java.util.Date",
+  "typeId": "java.util.Date"}, 
+  notBefore?: Date {"class": "java.util.Date",
+  "typeId": "java.util.Date"}, 
+  publicKey?: org_mule_extension_http_api_certificate_PublicKeyData_117 {"typeId": "org.mule.extension.http.api.certificate.PublicKeyData",
+  "typeAlias": "PublicKeyData"}, 
+  serialNumber?: Number, 
+  serialNumberObject?: org_mule_extension_http_api_certificate_SerialNumberData_124 {"typeAlias": "SerialNumberData",
+  "typeId": "org.mule.extension.http.api.certificate.SerialNumberData"}, 
+  sigAlgName?: String, 
+  sigAlgOID?: String, 
+  sigAlgParams?: Binary, 
+  signature?: Binary, 
+  subjectAlternativeNames?: Array<org_mule_extension_http_api_certificate_AlternativeNameData_131 {"typeAlias": "AlternativeNameData",
+  "typeId": "org.mule.extension.http.api.certificate.AlternativeNameData"}>, 
+  subjectDN?: org_mule_extension_http_api_certificate_PrincipalData_134 {"typeId": "org.mule.extension.http.api.certificate.PrincipalData",
+  "typeAlias": "PrincipalData"}, 
+  subjectX500Principal?: org_mule_extension_http_api_certificate_X500PrincipalData_137 {"typeId": "org.mule.extension.http.api.certificate.X500PrincipalData",
+  "typeAlias": "X500PrincipalData"}, 
+  "type"?: String, 
+  version?: Number
+|} {"typeId": "org.mule.extension.http.api.certificate.CertificateData",
+"typeAlias": "CertificateData"}
+type org_mule_extension_http_api_certificate_X500PrincipalData_137 = {| name?: String |} {"typeId": "org.mule.extension.http.api.certificate.X500PrincipalData",
+"typeAlias": "X500PrincipalData"}
+
+
+type org_mule_extension_http_api_certificate_CertificateExtension_95 = {|
+  criticality?: Boolean {"typeId": "boolean"}, 
+  oid?: String, 
+  value?: Binary
+|} {"typeAlias": "CertificateExtension",
+"typeId": "org.mule.extension.http.api.certificate.CertificateExtension"}
+
+
+type org_mule_extension_http_api_certificate_PublicKeyData_117 = {|
+  algorithm?: String, 
+  encoded?: Binary, 
+  modulus?: Number, 
+  params?: Number, 
+  publicKey?: String
+|} {"typeId": "org.mule.extension.http.api.certificate.PublicKeyData",
+"typeAlias": "PublicKeyData"}
+
+
+type org_mule_extension_http_api_certificate_PrincipalData_103 = {|
+  commonName?: String, 
+  name?: String
+|} {"typeId": "org.mule.extension.http.api.certificate.PrincipalData",
+"typeAlias": "PrincipalData"}
+
+
+type org_mule_extension_http_api_certificate_AlternativeNameData_100 = {|
+  name?: String, 
+  "type"?: Number
+|} {"typeAlias": "AlternativeNameData",
+"typeId": "org.mule.extension.http.api.certificate.AlternativeNameData"}
+
+
+type org_mule_extension_http_api_certificate_AlternativeNameData_131 = {|
+  name?: String, 
+  "type"?: Number
+|} {"typeAlias": "AlternativeNameData",
+"typeId": "org.mule.extension.http.api.certificate.AlternativeNameData"}
+
+
+type org_mule_extension_http_api_certificate_SerialNumberData_124 = {| serialNumber?: Number |} {"typeAlias": "SerialNumberData",
+"typeId": "org.mule.extension.http.api.certificate.SerialNumberData"}
+
+
+type org_mule_extension_http_api_certificate_PrincipalData_134 = {|
+  commonName?: String, 
+  name?: String
+|} {"typeId": "org.mule.extension.http.api.certificate.PrincipalData",
+"typeAlias": "PrincipalData"}
+
+
+type org_mule_extension_http_api_certificate_X500PrincipalData_108 = {| name?: String |} {"typeId": "org.mule.extension.http.api.certificate.X500PrincipalData",
+"typeAlias": "X500PrincipalData"}
+
+
+
+
+
+
+
+
+type org_mule_runtime_api_message_Message_65 = {|
+  payload: java_lang_Object {"class": "java.lang.Object",
+  "typeAlias": "Object",
+  "typeId": "java.lang.Object"}, 
+  attributes: org_mule_extension_http_api_HttpResponseAttributes {"typeId": "org.mule.extension.http.api.HttpResponseAttributes",
+  "typeAlias": "HttpResponseAttributes"}
+|} {"typeId": "org.mule.runtime.api.message.Message"}
+type org_mule_extension_http_api_HttpResponseAttributes = {|
+  statusCode: Number, 
+  reasonPhrase: String, 
+  headers: { _?: String }
+|} {"typeId": "org.mule.extension.http.api.HttpResponseAttributes",
+"typeAlias": "HttpResponseAttributes"}
+
+
+type java_lang_Object = {|  |} {"class": "java.lang.Object",
+"typeAlias": "Object",
+"typeId": "java.lang.Object"}
+
+
+
+
+

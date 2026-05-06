@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_3d895dc9_2119_410f_b700_585306769c49_Output_Variables_asset = Any
+

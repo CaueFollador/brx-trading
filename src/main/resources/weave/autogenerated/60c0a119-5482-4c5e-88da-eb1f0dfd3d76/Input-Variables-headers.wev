@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_60c0a119_5482_4c5e_88da_eb1f0dfd3d76_Input_Variables_headers = {|
+  "X-BAPI-SIGN": String, 
+  "X-BAPI-API-KEY": String, 
+  "X-BAPI-TIMESTAMP": String, 
+  "X-BAPI-RECV-WINDOW": String
+|}
+

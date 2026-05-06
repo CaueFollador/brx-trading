@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+		http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+
+	<flow name="health-flow" doc:name="health-flow">
+		<http:listener config-ref="HTTP_Listener_config" path="/health" allowedMethods="GET" doc:name="GET /health" >
+			<http:response statusCode="#[vars.httpStatus default 200]" />
+			<http:error-response statusCode="#[vars.httpStatus default 500]" >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	status: "UP",&#10;	application: "brx-trading"&#10;}]' doc:name="Set Payload" doc:id="068801a5-cc67-41aa-85d6-457466494152" />
+	</flow>
+	<flow name="health-database-flow" doc:id="35b4dc02-32c6-4bf9-ba04-1118e9d46801" >
+		<http:listener doc:name="GET /health" doc:id="e81cdf59-e56a-4eec-8aff-4a9c6c84eacf" config-ref="HTTP_Listener_config" path="/health/database" allowedMethods="GET" >
+			<http:response statusCode="#[vars.httpStatus default 200]" />
+			<http:error-response statusCode="#[vars.httpStatus default 500]" >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<db:select doc:name="Select Health" doc:id="640b5630-2cda-47b6-8ad9-3124c9c2eb15" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT 1]]></db:sql>
+		</db:select>
+		<set-payload value='#[output application/json&#10;---&#10;{&#10;	status: if(!isEmpty(payload)) "Database Connected" else "Database Not Connected",&#10;	application: "brx-trading"&#10;}]' doc:name="Set Payload" doc:id="bd4dacd6-f66e-4a29-8b6c-2b4340eb5ee2" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="089d1e5c-92fb-4e1c-bb7b-86c721d3b010" type="ANY">
+				<set-variable value="503" doc:name="Set Variable" doc:id="380d7cee-fbce-4b20-aedc-5ca18c8a37e5" variableName="httpStatus"/>
+				<set-payload value='#[output application/json&#10;---&#10;{&#10;	status: "Database Not Connected",&#10;	application: "brx-trading"&#10;}]' doc:name="Set Payload" doc:id="cd78a925-73e4-47a9-9acb-7d0b1471c94f" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+
+</mule>

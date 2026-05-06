@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<sub-flow name="set-initial-variables" doc:id="d6e6032e-49d0-49e0-92c1-8a0250dd0107" >
+		<set-variable value="#[payload.ticker]" doc:name="Set Ticker" doc:id="30de9b94-e7fb-4af9-ac10-a1dd664f1a6c" variableName="ticker"/>
+		<set-variable value="#[payload.ticker [-4 to -1]]" doc:name="Set Quote Coin" doc:id="ee49a321-b1d6-461b-aa0d-9ba90aa12c68" variableName="quoteCoin" />
+		<set-variable value="#[import * from dw::core::Strings&#10;---&#10;payload.ticker substringBefore vars.quoteCoin]" doc:name="Set Asset" doc:id="67d7a53d-b321-40ee-839e-9e6369f4b284" variableName="asset"/>
+		<set-variable value="#[payload.signal]" doc:name="Set Signal" doc:id="e98a2fce-2548-4013-bc9b-ad65b7d02b69" variableName="signal"/>
+		<set-variable value="#[payload.signalType]" doc:name="Set Signal Type" doc:id="4d78aef6-67a8-4e04-a20f-ef0d6557f72d" variableName="signalType"/>
+	</sub-flow>
+	<flow name="brx-signals-long" doc:id="ddf4661e-b733-4641-886e-1dea38a5e26a" >
+		<http:listener doc:name="Listener" doc:id="517d242c-ab32-4885-8906-735749235ba3" config-ref="HTTP_Listener_config" path="/api/brx/signals" allowedMethods="POST">
+			<http:error-response statusCode="#[(vars.httpStatus default attributes.statusCode) default 500]" />
+		</http:listener>
+		<set-variable value="#[import * from dw::Crypto&#10;var key = p('permission.key')&#10;var secret = p('permission.secret')&#10;var validTime = payload.time &gt;= now() - (p('permission.time') as Period)&#10;output application/json&#10;---&#10;attributes.queryParams.key == HMACWith(secret as Binary, key as Binary, 'HmacSHA256') and validTime]" doc:name="Request Validation" doc:id="082ea914-802e-4488-998f-9434009e5fd5" variableName="valid"/>
+		<choice doc:name="Choice" doc:id="553903cf-5d36-46ff-b193-2139d01fa6d6" >
+			<when expression="#[vars.valid]">
+				<flow-ref doc:name="Set Initial Variables" doc:id="13f7f09d-e0f9-4cbe-ac64-2c7cba030f66" name="set-initial-variables" />
+				<logger level="INFO" doc:name="INFO - Start Logger" doc:id="04cdbb4a-3e07-44a3-a117-57eaffcdb0fa" message="#[&quot;START - Starting &quot;++ vars.signal ++ &quot; Order Flow to &quot; ++ vars.asset ++ &quot; at &quot; ++ (now() &gt;&gt; &quot;Europe/London&quot;) as DateTime {format: &quot;yyyy-MM-dd'T'HH:mm:ss&quot;} ++ &quot; - Central Time&quot;]" />
+				<flow-ref doc:name="Buy or Sell Flow Reference" doc:id="85e6a647-937b-4ea9-b15d-2fbd60eca689" name="main-process-subflow" />
+			</when>
+			<otherwise >
+				<set-variable value="401" doc:name="Set Variable" doc:id="58f06e5b-37d6-4ba4-a1df-02eb48d00e43" variableName="httpStatus"/>
+				<raise-error doc:name="Raise error" doc:id="6876fcc7-95c1-403c-b1f5-7637e3579ea1" type="APP:UNAUTHORIZED" description="Unauthorized"/>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="af765a31-dcd2-4149-9c8b-3858ff5e87f4" message="PROCESS FINISHED"/>
+	</flow>
+</mule>

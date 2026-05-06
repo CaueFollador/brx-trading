@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_90bf46b5_4ef1_4625_887e_0ed5d214b560_Output_Variables_tickerPrice = Any
+

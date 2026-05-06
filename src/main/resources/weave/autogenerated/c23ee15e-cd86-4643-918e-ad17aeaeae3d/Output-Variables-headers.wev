@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_c23ee15e_cd86_4643_918e_ad17aeaeae3d_Output_Variables_headers = {|
+  "X-BAPI-SIGN": String, 
+  "X-BAPI-API-KEY": String, 
+  "X-BAPI-TIMESTAMP": String, 
+  "X-BAPI-RECV-WINDOW": String
+|}
+

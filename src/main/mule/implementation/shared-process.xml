@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<sub-flow name="set-leverage" doc:id="3d895dc9-2119-410f-b700-585306769c49" >
+		<set-variable value='#[output application/json indent = false&#10;---&#10;{&#10;  "category": "linear",&#10;  "symbol": vars.ticker,&#10;  "buyLeverage": "1",&#10;  "sellLeverage": "1"&#10;}]' doc:name="Set Leverage Body" doc:id="8dd4487d-251e-4e9f-bf75-2b354fcc4803" variableName="body"/>
+		<flow-ref doc:name="Set Bybit Headers" doc:id="4a3a8d09-273b-41d2-ac25-a1c50abd4711" name="set-bybit-headers" />
+		<http:request doc:name="Set Leverage" doc:id="e26600b5-a369-4197-b0ab-9688a8aa0d50" config-ref="bybit-http-request" path="/position/set-leverage" method="POST">
+			<http:body ><![CDATA[#[vars.body]]]></http:body>
+			<http:headers ><![CDATA[#[vars.headers]]]></http:headers>
+		</http:request>
+		<flow-ref doc:name="Validate Bybit Requistion" doc:id="0f740edf-b5ba-4dc2-94f4-0d4be1226294" name="validate-bybit-requisition"/>
+	</sub-flow>
+	<sub-flow name="set-bybit-headers" doc:id="01e369a1-89e5-441c-be73-6dffbc4b6c56" >
+		<set-variable value="#[output text/plain&#10;---&#10;if(!isEmpty(vars.body)) write(vars.body,'application/json', {indent: 0}) as String else &quot;&quot;]" doc:name="Set Body In Text" doc:id="45499436-13c6-461c-901d-6cd55b013c55" variableName="bodyText"/>
+		<set-variable value='#[now() as Number {unit: "milliseconds"} as String]' doc:name="Set Timestamp" doc:id="47c30f14-c17e-46b0-b418-4b5ee994415f" variableName="timestamp"/>
+		<set-variable value="#[%dw 2.0&#10;output text/plain&#10;import HMACWith from dw::Crypto&#10;import toQueryString from dwl::functions::functions&#10;&#10;var key = p('bybit.apiKey')&#10;var secret = p('bybit.apiSecret')&#10;var params = if(!isEmpty(vars.queryParams)) toQueryString(vars.queryParams) else &quot;&quot;&#10;var recv = &quot;5000&quot;&#10;---&#10;HMACWith(&#10;    secret as Binary,&#10;    (vars.timestamp ++ key ++ recv ++ params ++ vars.bodyText) as Binary,&#10;    &quot;HmacSHA256&quot;&#10;)]" doc:name="Set Sign" doc:id="8a69d624-25b4-4068-a905-cad2dbeb35a7" variableName="sign"/>
+		<set-variable value="#[%dw 2.0&#10;output application/java&#10;&#10;var key = p('bybit.apiKey')&#10;var recv = &quot;5000&quot;&#10;&#10;---&#10;{&#10;	&quot;X-BAPI-SIGN&quot;: vars.sign,&#10;    &quot;X-BAPI-API-KEY&quot;: key,&#10;    &quot;X-BAPI-TIMESTAMP&quot;: vars.timestamp,&#10;    &quot;X-BAPI-RECV-WINDOW&quot;: recv,&#10;}]" doc:name="Set Headers Variable" doc:id="2d61e1ee-d404-4665-9d2e-5a305a0f847b" variableName="headers" />
+		<remove-variable doc:name="Remove Body In Text" doc:id="f644cbef-33b2-4cc8-a73d-15194b61d863" variableName="bodyText"/>
+	</sub-flow>
+	<sub-flow name="get-user-balance" doc:id="c2c70b38-b194-43d9-b1ce-36902053db11" >
+		<set-variable value='#[output application/json&#10;---&#10;{&#10;	"accountType" : "UNIFIED",&#10;	"coin" : vars.quoteCoin&#10;}]' doc:name="Set Query Params" doc:id="1b8d538e-7ffa-4f14-b2d1-385f27736308" variableName="queryParams" />
+		<flow-ref doc:name="Set Bybit Headers" doc:id="92e0e9cb-90fa-49d5-a968-117867c3acaf" name="set-bybit-headers" />
+		<http:request doc:name="Get User Balance" doc:id="be483460-9797-47ce-9d96-2a7223d35808" config-ref="bybit-http-request" path="/account/wallet-balance" >
+			<http:headers ><![CDATA[#[vars.headers]]]></http:headers>
+			<http:query-params ><![CDATA[#[vars.queryParams]]]></http:query-params>
+		</http:request>
+		<flow-ref doc:name="Validate Bybit Requistion" doc:id="8cea04ad-cfe7-4f81-9614-9604178f176f" name="validate-bybit-requisition" />
+		<set-variable value="#[payload.result.list[0].coin[0].walletBalance]" doc:name="Set Quote Qty" doc:id="9125d1e1-3a02-4927-b7c4-34b9e278ceae" variableName="quoteQty" />
+		<remove-variable doc:name="Remove Query Params" doc:id="38bd6ce9-a7af-4bb4-9bf9-d9d2b5fda8ed" variableName="queryParams" />
+	</sub-flow>
+	<sub-flow name="get-ticker-price" doc:id="90bf46b5-4ef1-4625-887e-0ed5d214b560" >
+		<http:request doc:name="Get Ticker" doc:id="aa22889a-eede-4ede-ae24-300fbd02ff7a" config-ref="bybit-http-request" path="/market/tickers">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"category" : "linear",
+	"symbol": vars.ticker
+}]]]></http:query-params>
+		</http:request>
+		<flow-ref doc:name="Validate Bybit Requistion" doc:id="cf194f0e-bf6a-4790-a259-70dfe702e95c" name="validate-bybit-requisition" />
+		<set-variable value="#[payload.result.list[0].lastPrice]" doc:name="Set Ticker Price" doc:id="bcde15b2-01f3-40ca-92df-001a43b30c21" variableName="tickerPrice"/>
+		<set-variable value="#[payload.result.list[0].fundingRate]" doc:name="Set Funding Rate" doc:id="809e8930-3d98-440a-843c-e7335db45cec" variableName="fundingRate"/>
+	</sub-flow>
+	<sub-flow name="get-open-orders-subflow" doc:id="c23ee15e-cd86-4643-918e-ad17aeaeae3d" >
+		<set-variable value='#[output application/json&#10;---&#10;{&#10;	"category": "linear",&#10;	"symbol": vars.ticker	&#10;}]' doc:name="Set Query Params" doc:id="8317a324-e9f7-41de-bf1c-de195d600c1d" variableName="queryParams"/>
+		<flow-ref doc:name="Set Bybit Headers" doc:id="6f0dc05d-6e78-4781-8959-6ce23ad906a6" name="set-bybit-headers"/>
+		<http:request doc:name="Get Open Orders" doc:id="af7e520a-f557-468d-9608-411255feb556" config-ref="bybit-http-request" path="/position/list">
+			<http:headers ><![CDATA[#[vars.headers]]]></http:headers>
+			<http:query-params ><![CDATA[#[vars.queryParams]]]></http:query-params>
+		</http:request>
+		<flow-ref doc:name="Validate Bybit Requistion" doc:id="85cd10ef-f5de-4443-949a-39f62045e9a5" name="validate-bybit-requisition" />
+		<set-variable value="#[payload]" doc:name="Set open Orders" doc:id="257a833b-0055-4ee2-aaf7-aab4d4babeee" variableName="openOrders"/>
+		<set-variable doc:name="Set PnL" doc:id="4dc2c87b-202f-4b0f-99ce-caf57084d326" variableName="pnl" value="#[(payload.result.list[0].unrealisedPnl as Number default 0)]" />
+		<remove-variable doc:name="Remove Query Params" doc:id="0655a160-0cee-4320-af7d-9d7725e6885a" variableName="queryParams"/>
+	</sub-flow>
+	<sub-flow name="create-order-subflow" doc:id="0db4c022-476c-4f9a-8493-261937028ed5" >
+		<set-variable value="#[%dw 2.0&#10;output application/json indent = false, skipNullOn = 'everywhere'&#10;---&#10;{&#10;  &quot;category&quot;: &quot;linear&quot;,&#10;  &quot;symbol&quot;: vars.ticker,&#10;  &quot;side&quot;: vars.signal,&#10;  &quot;orderType&quot;: &quot;Market&quot;,&#10;  &quot;qty&quot;: vars.orderQty,&#10;  &quot;positionIdx&quot;: 0,&#10;  &quot;orderLinkId&quot;: vars.dbId,&#10;  &quot;reduceOnly&quot;: vars.reduceOnly default null&#10;}]" doc:name="Set Body To Create Order" doc:id="05582796-c17c-41a4-84d4-2c9480ce7d3b" variableName="body" />
+		<flow-ref doc:name="Set Bybit Headers" doc:id="2cae7a95-da5a-4fae-8294-83fae6b2bd6a" name="set-bybit-headers" />
+		<http:request doc:name="Request" doc:id="9764159a-8a4f-432f-a740-48ab0c168bfb" config-ref="bybit-http-request" method="POST" path="/order/create" >
+			<http:body ><![CDATA[#[vars.body]]]></http:body>
+			<http:headers ><![CDATA[#[vars.headers]]]></http:headers>
+		</http:request>
+		<flow-ref doc:name="Validate Bybit Requistion" doc:id="4d868948-2fef-469b-8288-66177ba9ff5e" name="validate-bybit-requisition" />
+	</sub-flow>
+	<sub-flow name="transfer-assets-subflow" doc:id="02691ed3-46f3-413a-81d5-e6e33f2ab4b0" >
+		<set-variable value="#[%dw 2.0&#10;output application/json indent = false, skipNullOn = 'everywhere'&#10;---&#10;{&#10;  &quot;transferId&quot;: uuid(),&#10;  &quot;coin&quot;: vars.quoteCoin,&#10;  &quot;amount&quot;: vars.transf,&#10;  &quot;fromAccountType&quot;: &quot;UNIFIED&quot;,&#10;  &quot;toAccountType&quot;: &quot;FUND&quot;&#10;}]" doc:name="Set Body To Transfer Assets" doc:id="92788b74-1b2e-4af6-b334-7812d15f6421" variableName="body"/>
+		<flow-ref doc:name="Set Bybit Headers" doc:id="0ab08565-face-4c7b-a3ff-10b6eb54450a" name="set-bybit-headers" />
+		<http:request doc:name="Transfer Assets" doc:id="e6b90940-9034-4157-8b4f-5656a7f040ed" config-ref="bybit-http-request" method="POST" path="/asset/transfer/inter-transfer">
+			<http:body ><![CDATA[#[vars.body]]]></http:body>
+			<http:headers ><![CDATA[#[vars.headers]]]></http:headers>
+		</http:request>
+		<flow-ref doc:name="Validate Bybit Requistion" doc:id="9364deca-efbc-4184-9f2b-af4b670e6703" name="validate-bybit-requisition" />
+		<logger level="INFO" doc:name="Logger" doc:id="9efb5b04-d97f-4153-82d9-3d30af1ed7d5" />
+	</sub-flow>
+	<sub-flow name="insert-orders-db-subflow" doc:id="888ab340-fe1e-4bf7-9de1-8be22fe0e168" >
+		<db:insert doc:name="Insert Orders" doc:id="f7c588c0-b5a6-4d6b-8935-dab993da4b58" config-ref="Database_Config">
+			<error-mapping targetType="DATABASE:INSERT_ORDER" />
+			<db:sql ><![CDATA[INSERT INTO orders ("signalId", "symbol", "side", "orderType", "qty", "orderId", "orderRole", "parentOrderId", "createdAt")
+VALUES (:signalId, :symbol, :side, :orderType, :qty, :orderId, :orderRole, :parentOrderId, NOW())]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+  signalId: vars.dbId,
+  symbol: vars.ticker,
+  side: vars.signal,
+  orderType: "Market",
+  qty: vars.orderQty,
+  orderId: payload.result.orderId,
+  orderRole: vars.orderRole,
+  parentOrderId: vars.parentOrderId
+}]]]></db:input-parameters>
+		</db:insert>
+	</sub-flow>
+	<sub-flow name="send-email-subflow" doc:id="b7ed2eb3-dc4e-46d5-9ef1-c72671804850" >
+		<email:send doc:name="Send" doc:id="0ff2cb8e-0ba0-43d4-9b40-8e2b3bbf0216" config-ref="Email_SMTP" subject="#[vars.subject]">
+			<email:to-addresses >
+				<email:to-address value="#[vars.toEmail]" />
+			</email:to-addresses>
+			<email:body contentType='#[vars.contentType default "text/plain"]' >
+				<email:content ><![CDATA[#[vars.mailBody]]]></email:content>
+			</email:body>
+		</email:send>
+	</sub-flow>
+	<sub-flow name="validate-bybit-requisition" doc:id="60c0a119-5482-4c5e-88da-eb1f0dfd3d76" >
+		<validation:is-true doc:name="Has error code" doc:id="11153df6-88a4-4c94-9d5e-78f033ecefa6" expression='#[(payload.retCode as String) == "0" or (payload.retCode as String) == "110043"]'/>
+	</sub-flow>
+</mule>

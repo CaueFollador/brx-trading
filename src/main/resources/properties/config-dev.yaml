@@ -1,0 +1,26 @@
+bybit:
+  host: "api-testnet.bybit.com"
+  apiKey: "${BYBIT_API_KEY}"
+  apiSecret: "${BYBIT_API_SECRET}"
+
+db:
+  host: "localhost"
+  port: "5432"
+  name: "${DB_NAME}"
+  user: "${DB_USER}"
+  password: "${DB_PASSWORD}"
+
+permission:
+  key: "${URL_PERMISSION_KEY}"
+  secret: "${URL_PERMISSION_SECRET}"
+  time: "${PERMISSION_TIME}"
+
+smtp:
+  user: "${SMTP_USER}"
+  password: "${SMTP_PASSWORD}"
+
+truststore:
+  password: "${TRUSTSTORE_PASSWORD}"
+
+notification:
+  email: "caue.follador@outlook.com"
