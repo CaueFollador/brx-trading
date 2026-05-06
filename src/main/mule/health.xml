@@ -17,7 +17,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
 			</http:error-response>
 		</http:listener>
-		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	status: "UP",&#10;	application: "brx-trading"&#10;}]' doc:name="Set Payload" doc:id="068801a5-cc67-41aa-85d6-457466494152" />
+		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	status: &quot;UP&quot;,&#10;	env: p('mule.env'),&#10;	application: &quot;brx-trading&quot;&#10;}]" doc:name="Set Payload" doc:id="068801a5-cc67-41aa-85d6-457466494152" />
 	</flow>
 
 </mule>
