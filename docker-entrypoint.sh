@@ -3,6 +3,7 @@ exec /opt/mule/bin/mule \
   -M-Dmule.env="${MULE_ENV}" \
   -M-Dbybit.apiKey="${BYBIT_API_KEY}" \
   -M-Dbybit.apiSecret="${BYBIT_API_SECRET}" \
+  -M-Ddb.host="${DB_HOST}" \
   -M-Ddb.name="${DB_NAME}" \
   -M-Ddb.user="${DB_USER}" \
   -M-Ddb.password="${DB_PASSWORD}" \
